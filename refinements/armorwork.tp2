@@ -1,0 +1,56 @@
+BACKUP ~backup~
+AUTHOR ~http://forums.spellholdstudios.net/index.php?showforum=116~
+
+AUTO_TRA ~languages/%s~
+ASK_EVERY_COMPONENT
+ALWAYS
+  <<<<<<<< inlined/tb#damned_files_to_fix.txt
+>>>>>>>>
+END
+
+LANGUAGE ~English~   ~languages/english~   ~languages/english/setup.tra~
+LANGUAGE ~French~    ~languages/french~    ~languages/french/setup.tra~
+LANGUAGE ~Japanese~  ~languages/japanese~  ~languages/japanese/setup.tra~
+LANGUAGE ~Polish~    ~languages/polish~    ~languages/polish/setup.tra~
+LANGUAGE ~Russian~    ~languages/russian~    ~languages/russian/setup.tra~
+
+////////////////////////////////////////////////////////////////////////////////////
+//Armour Revision
+
+BEGIN ~text -> short~
+
+NO_LOG_RECORD
+
+	COPY ~%LANGUAGE%/armor/human_readable/ident.tp2~ ~%LANGUAGE%/armor/ident.tp2~
+	     ~%LANGUAGE%/armor/human_readable/unide.tp2~ ~%LANGUAGE%/armor/unide.tp2~
+	INNER_PATCH ~1~
+		BEGIN
+		WRITE_BYTE 0 0x0a
+		READ_ASCII 0 lnl (1)
+		WRITE_BYTE 0 0x0d
+		READ_ASCII 0 mnl (1)
+		END
+	REPLACE_TEXTUALLY ~%mnl%~ ~~
+	REPLACE_TEXTUALLY ~%lnl%~ ~___NL___~
+	REPLACE_TEXTUALLY ~___NL___- o - o - o - o - o - o - o - o - o - o - o - o - o *___NL___~ ~%lnl%~
+	REPLACE_TEXTUALLY ~ ~ ~___SPACE___~
+	REPLACE_TEXTUALLY ~___NL___--------___NL___~ ~ ~
+
+BEGIN ~short -> text~
+
+NO_LOG_RECORD
+
+	COPY ~%LANGUAGE%/armor/ident.tp2~ ~%LANGUAGE%/armor/human_readable/ident.tp2~
+	     ~%LANGUAGE%/armor/unide.tp2~ ~%LANGUAGE%/armor/human_readable/unide.tp2~
+	INNER_PATCH ~1~
+		BEGIN
+		WRITE_BYTE 0 0x0a
+		READ_ASCII 0 lnl (1)
+		WRITE_BYTE 0 0x0d
+		READ_ASCII 0 mnl (1)
+		END
+	REPLACE_TEXTUALLY ~ ~ ~___NL___--------___NL___~
+	REPLACE_TEXTUALLY  ~___SPACE___~~ ~
+	REPLACE_TEXTUALLY ~%lnl%~ ~___NL___- o - o - o - o - o - o - o - o - o - o - o - o - o___NL___~
+	REPLACE_TEXTUALLY ~___NL___~ ~%lnl%~
+	REPLACE_TEXTUALLY ~%lnl%~ ~%mnl%%lnl%~
